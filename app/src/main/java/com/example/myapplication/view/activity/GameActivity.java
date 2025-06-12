@@ -14,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.controller.GameViewModel;
-import com.example.myapplication.controller.ChapterViewModel; // Import ChapterViewModel
-import com.example.myapplication.controller.LevelViewModel; // Import LevelViewModel
-import com.example.myapplication.model.data.Chapter; // Import Chapter data class
-import com.example.myapplication.model.data.Level; // Import Level data class
+import com.example.myapplication.controller.ChapterViewModel;
+import com.example.myapplication.controller.LevelViewModel;
+import com.example.myapplication.model.data.Chapter;
+import com.example.myapplication.model.data.Level;
 import com.example.myapplication.model.database.AppDatabase;
 import com.example.myapplication.view.customview.LivesView;
 import com.example.myapplication.view.dialog.ResultDialog;
@@ -36,10 +36,10 @@ public class GameActivity extends AppCompatActivity {
     private LivesView livesView;
 
     private GameViewModel gameViewModel;
-    private LevelViewModel levelViewModel;   // Instance of LevelViewModel
-    private ChapterViewModel chapterViewModel; // NEW: Instance of ChapterViewModel
+    private LevelViewModel levelViewModel;
+    private ChapterViewModel chapterViewModel;
     private int currentLevelId;
-    private int currentPlayingChapterId; // To hold the ID of the current chapter
+    private int currentPlayingChapterId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,65 +56,69 @@ public class GameActivity extends AppCompatActivity {
 
         // --- Retrieve Intent Extras ---
         currentLevelId = getIntent().getIntExtra("levelId", -1);
-        currentPlayingChapterId = getIntent().getIntExtra("chapterId", -1); // Get chapterId from Intent
+        currentPlayingChapterId = getIntent().getIntExtra("chapterId", -1);
 
         // --- Validate Intent Extras ---
         if (currentLevelId == -1 || currentPlayingChapterId == -1) {
             Toast.makeText(this, "Error: Invalid level or chapter ID.", Toast.LENGTH_SHORT).show();
-            finish(); // Close activity if IDs are invalid
+            finish();
             return;
         }
 
         // --- Initialize ViewModels ---
         gameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
         levelViewModel = new ViewModelProvider(this).get(LevelViewModel.class);
-        chapterViewModel = new ViewModelProvider(this).get(ChapterViewModel.class); // NEW: Initialize ChapterViewModel
+        chapterViewModel = new ViewModelProvider(this).get(ChapterViewModel.class);
 
         // Inform GameViewModel about the current chapter for unlock logic
         gameViewModel.setCurrentPlayingChapterId(currentPlayingChapterId);
 
+        // --- Load initial questions for the level first ---
+        // Call loadQuestionsForLevel BEFORE setting up the observer that might react to null.
+        // The observer is set up immediately, but the _currentQuestion MutableLiveData
+        // will only be updated by loadQuestionsForLevel, preventing the initial null trigger.
+        gameViewModel.loadQuestionsForLevel(currentLevelId);
+
+
         // --- Observe current question LiveData ---
+        // This observer will now correctly react to the question being loaded (not null)
+        // or to null only *after* all questions have been iterated.
         gameViewModel.getCurrentQuestion().observe(this, question -> {
             if (question != null) {
-                // Update UI with current question details
                 tvQuestionNumber.setText(String.format(Locale.getDefault(), "Question %d", gameViewModel.currentQuestionIndex));
                 Glide.with(GameActivity.this)
-                        .load(question.imageUrl) // Load image from URL
-                        .placeholder(R.drawable.ic_placeholder_image) // Show placeholder while loading
+                        .load(question.imageUrl)
+                        .placeholder(R.drawable.ic_placeholder_image)
                         .into(ivQuestionImage);
-                etAnswer.setText(""); // Clear previous answer input
+                etAnswer.setText("");
             } else {
-                // If question is null, it means all questions for this level are answered
+                // This else block is now correctly triggered ONLY when _currentQuestion.setValue(null)
+                // is called in GameViewModel.loadNextQuestion() after all questions are exhausted.
                 showLevelCompletionDialog();
             }
         });
 
         // --- Observe timer LiveData ---
         gameViewModel.getTimerMillisRemaining().observe(this, millis -> {
-            // Convert milliseconds to minutes and seconds for display
             long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
             long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) -
                     TimeUnit.MINUTES.toSeconds(minutes);
             tvTimer.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
 
             if (millis <= 0 && gameViewModel.getCurrentQuestion().getValue() != null) {
-                // Timer ran out while a question was active.
-                // Life loss and next question load are handled by GameViewModel's onFinish().
                 Toast.makeText(this, "Time's up! Life lost.", Toast.LENGTH_SHORT).show();
             }
         });
 
         // --- Observe lives LiveData ---
         gameViewModel.getLives().observe(this, lives -> {
-            livesView.setLives(lives); // Update custom LivesView
+            livesView.setLives(lives);
             if (lives <= 0) {
-                // Game Over condition: no lives left
                 Toast.makeText(this, "No lives left! Game Over.", Toast.LENGTH_LONG).show();
-                // Navigate back to Main Activity and clear activity stack
                 Intent intent = new Intent(GameActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish(); // Finish GameActivity
+                finish();
             }
         });
 
@@ -126,20 +130,19 @@ public class GameActivity extends AppCompatActivity {
                 return;
             }
 
-            boolean isCorrect = gameViewModel.checkAnswer(userAnswer); // Check answer and update score/lives
+            boolean isCorrect = gameViewModel.checkAnswer(userAnswer);
 
             if (isCorrect) {
                 new ResultDialog("Correct!", "Next Question", () -> gameViewModel.loadNextQuestion())
                         .show(getSupportFragmentManager(), "ResultDialog");
             } else {
-                // If incorrect, prompt to try again and reset input field
                 new ResultDialog("Incorrect! Try again.", "Try Again", () -> etAnswer.setText(""))
                         .show(getSupportFragmentManager(), "ResultDialog");
             }
         });
 
-        // --- Load initial questions for the level when activity starts ---
-        gameViewModel.loadQuestionsForLevel(currentLevelId);
+        // Removed: gameViewModel.loadQuestionsForLevel(currentLevelId); from here
+        // It's now called earlier, before the observer.
     }
 
     /**
@@ -147,47 +150,37 @@ public class GameActivity extends AppCompatActivity {
      */
     private void showLevelCompletionDialog() {
         int finalScore = gameViewModel.getFinalLevelScore();
-        // Mark the current level as completed in the database with its final score
         gameViewModel.markLevelCompleted(currentLevelId, finalScore);
 
-        // Trigger the logic to potentially unlock the next chapter
         gameViewModel.updateChapterUnlockStatus(currentPlayingChapterId);
 
-        // Determine if the entire game is completed (i.e., this is the last level of the last chapter)
-        chapterViewModel.getAllChapters().observe(this, allChapters -> { // Use chapterViewModel
-            if (allChapters != null && !allChapters.isEmpty()) { // Ensure not null and not empty
-                // Find the last chapter's ID
+        chapterViewModel.getAllChapters().observe(this, allChapters -> {
+            if (allChapters != null && !allChapters.isEmpty()) {
                 int lastChapterId = allChapters.get(allChapters.size() - 1).getId();
 
-                // Check if current chapter is the last one AND if it's fully completed
                 if (currentPlayingChapterId == lastChapterId) {
                     levelViewModel.getLevelsForChapter(currentPlayingChapterId).observe(this, levelsInCurrentChapter -> {
-                        if (levelsInCurrentChapter != null && !levelsInCurrentChapter.isEmpty()) { // Ensure not null and not empty
+                        if (levelsInCurrentChapter != null && !levelsInCurrentChapter.isEmpty()) {
                             boolean currentChapterFullyCompleted = true;
-                            for (Level level : levelsInCurrentChapter) { // Traditional for-each loop
+                            for (Level level : levelsInCurrentChapter) {
                                 if (!level.isCompleted()) {
                                     currentChapterFullyCompleted = false;
                                     break;
                                 }
                             }
                             if (currentChapterFullyCompleted) {
-                                // All levels in the last chapter are completed, show full game summary
                                 showGameCompletionSummary();
                             } else {
-                                // Last chapter but not all levels done, navigate back to levels
                                 navigateToLevelOrChapterList(finalScore);
                             }
                         } else {
-                            // No levels found for current chapter (shouldn't happen if data is consistent)
                             navigateToLevelOrChapterList(finalScore);
                         }
                     });
                 } else {
-                    // Not the last chapter, just navigate back to levels
                     navigateToLevelOrChapterList(finalScore);
                 }
             } else {
-                // No chapters found (shouldn't happen if initial data populates)
                 navigateToLevelOrChapterList(finalScore);
             }
         });
@@ -199,7 +192,7 @@ public class GameActivity extends AppCompatActivity {
     private void navigateToLevelOrChapterList(int finalScore) {
         new ResultDialog("Level Completed!\nScore: " + finalScore, "Continue", () -> {
             Intent intent = new Intent(GameActivity.this, LevelActivity.class);
-            intent.putExtra("chapterId", currentPlayingChapterId); // Pass current chapter ID
+            intent.putExtra("chapterId", currentPlayingChapterId);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
@@ -210,17 +203,14 @@ public class GameActivity extends AppCompatActivity {
      * Displays the summary of scores across all chapters when the entire game is completed.
      */
     private void showGameCompletionSummary() {
-        // This runs on a background thread to fetch all data synchronously
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            List<Map<String, Object>> chapterSummaries = gameViewModel.getChapterScoresSummarySync(); // Get synchronous summary
+            List<Map<String, Object>> chapterSummaries = gameViewModel.getChapterScoresSummarySync();
 
-            // Build the summary string on the background thread
             StringBuilder summary = new StringBuilder("Game Completed!\nYour Scores:\n");
-            if (chapterSummaries != null && !chapterSummaries.isEmpty()) { // Ensure not null and not empty
-                for (Map<String, Object> chapterData : chapterSummaries) { // Traditional for-each loop
+            if (chapterSummaries != null && !chapterSummaries.isEmpty()) {
+                for (Map<String, Object> chapterData : chapterSummaries) {
                     String title = (String) chapterData.get("chapterTitle");
                     int score = (int) chapterData.get("totalScore");
-                    // Append data only if retrieved successfully
                     if (title != null) {
                         summary.append(String.format(Locale.getDefault(), "%s: %d\n", title, score));
                     }
@@ -229,7 +219,6 @@ public class GameActivity extends AppCompatActivity {
                 summary.append("No score data available.");
             }
 
-            // Post the result back to the UI thread to show the dialog
             runOnUiThread(() -> {
                 new ResultDialog(summary.toString(), "Back to Main", () -> {
                     Intent intent = new Intent(GameActivity.this, MainActivity.class);
@@ -244,11 +233,10 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Remove observers to prevent memory leaks, especially for LiveData.observeForever
-        gameViewModel.getCurrentQuestion().removeObservers(this);
-        gameViewModel.getTimerMillisRemaining().removeObservers(this);
-        gameViewModel.getLives().removeObservers(this);
-        // LiveData observers created with 'this' (the activity) as LifecycleOwner
-        // are automatically removed when the activity is destroyed.
+        if (gameViewModel != null) {
+            gameViewModel.getCurrentQuestion().removeObservers(this);
+            gameViewModel.getTimerMillisRemaining().removeObservers(this);
+            gameViewModel.getLives().removeObservers(this);
+        }
     }
 }

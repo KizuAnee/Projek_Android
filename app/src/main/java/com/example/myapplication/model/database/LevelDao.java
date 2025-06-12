@@ -16,21 +16,20 @@ public interface LevelDao {
     @Query("SELECT * FROM levels WHERE chapterId = :chapterId ORDER BY levelNumber ASC")
     LiveData<List<Level>> getLevelsForChapter(int chapterId);
 
-
     @Query("SELECT * FROM levels WHERE chapterId = :chapterId ORDER BY levelNumber ASC")
     List<Level> getLevelsForChapterNonLive(int chapterId);
 
     @Query("SELECT * FROM levels WHERE id = :levelId")
-    Level getLevelById(int levelId); // Non-Live version
+    Level getLevelById(int levelId);
 
     @Query("SELECT COUNT(*) FROM levels WHERE chapterId = :chapterId AND completed = 1")
     LiveData<Integer> getCompletedLevelsCountForChapter(int chapterId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Level level);
+    long insert(Level level); // <-- UBAH TIPE PENGEMBALIAN MENJADI long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Level> levels);
+    void insertAll(List<Level> levels); // Untuk List, biasanya void atau List<Long>
 
     @Update
     void update(Level level);
