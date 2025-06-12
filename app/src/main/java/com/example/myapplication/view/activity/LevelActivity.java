@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.controller.LevelViewModel; // Import new ViewModel
+import com.example.myapplication.controller.LevelViewModel;
 import com.example.myapplication.model.data.Level;
 import com.example.myapplication.view.adapter.LevelAdapter;
 
 public class LevelActivity extends AppCompatActivity {
 
     private LevelAdapter levelAdapter;
-    private LevelViewModel levelViewModel; // Use LevelViewModel
+    private LevelViewModel levelViewModel;
     private int chapterId;
 
     @Override
@@ -23,25 +23,30 @@ public class LevelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
 
+        // Menerima chapterId dari Intent sebelumnya (dari ChapterActivity)
         chapterId = getIntent().getIntExtra("chapterId", -1);
         if (chapterId == -1) {
+            // Jika chapterId tidak valid, tutup aktivitas
             finish();
             return;
         }
 
-        levelViewModel = new ViewModelProvider(this).get(LevelViewModel.class); // Get LevelViewModel
+        levelViewModel = new ViewModelProvider(this).get(LevelViewModel.class);
 
         RecyclerView rvLevels = findViewById(R.id.rvLevels);
         levelAdapter = new LevelAdapter(level -> {
-            // Level unlocked status is handled in LevelAdapter
+            // Ketika sebuah level diklik, kirimkan kedua ID ke GameActivity
             Intent intent = new Intent(LevelActivity.this, GameActivity.class);
             intent.putExtra("levelId", level.getId());
+            intent.putExtra("chapterId", level.getChapterId()); // Mengirimkan chapterId dari objek Level
+            // ------------------------------------------
             startActivity(intent);
-        }, levelViewModel, this); // Pass ViewModel and LifecycleOwner to adapter
+        }, levelViewModel, this); // Pass ViewModel dan LifecycleOwner ke adapter
 
         rvLevels.setLayoutManager(new LinearLayoutManager(this));
         rvLevels.setAdapter(levelAdapter);
 
+        // Mengamati daftar level untuk chapter yang dipilih
         levelViewModel.getLevelsForChapter(chapterId).observe(this, levels -> {
             if (levels != null) {
                 levelAdapter.submitList(levels);

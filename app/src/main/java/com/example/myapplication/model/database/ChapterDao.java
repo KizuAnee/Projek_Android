@@ -16,20 +16,20 @@ public interface ChapterDao {
     @Query("SELECT * FROM chapters ORDER BY id ASC")
     LiveData<List<Chapter>> getAllChapters();
 
-    @Query("SELECT * FROM chapters ORDER BY id ASC") // Non-Live version
+    @Query("SELECT * FROM chapters ORDER BY id ASC")
     List<Chapter> getAllChaptersNonLive();
 
     @Query("SELECT * FROM chapters WHERE id = :chapterId")
-    Chapter getChapterById(int chapterId); // Non-Live version
+    Chapter getChapterById(int chapterId);
 
-    @Query("SELECT COUNT(*) FROM chapters") // For initial data check
+    @Query("SELECT COUNT(*) FROM chapters")
     int countChapters();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Chapter chapter);
+    long insert(Chapter chapter); // <-- UBAH TIPE PENGEMBALIAN MENJADI long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Chapter> chapters);
+    void insertAll(List<Chapter> chapters); // Untuk List, biasanya void atau List<Long>
 
     @Update
     void update(Chapter chapter);

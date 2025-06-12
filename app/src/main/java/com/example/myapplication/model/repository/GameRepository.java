@@ -30,7 +30,7 @@ public class GameRepository {
     private GameStateDao gameStateDao;
     private ExecutorService databaseWriteExecutor;
 
-    private static final int MAX_LIVES = 5; // Define MAX_LIVES here
+    private static final int MAX_LIVES = 5;
 
     public GameRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -48,6 +48,8 @@ public class GameRepository {
     public LiveData<GameState> getGameState() { return gameStateDao.getGameState(); }
 
     // Insertion methods (async)
+    // IMPORTANT: These insert methods in DAO should return 'long' for auto-generated IDs
+    // Example: @Insert(onConflict = OnConflictStrategy.REPLACE) long insert(Chapter chapter);
     public void insertChapter(Chapter chapter) { databaseWriteExecutor.execute(() -> chapterDao.insert(chapter)); }
     public void insertAllChapters(List<Chapter> chapters) { databaseWriteExecutor.execute(() -> chapterDao.insertAll(chapters)); }
     public void insertLevel(Level level) { databaseWriteExecutor.execute(() -> levelDao.insert(level)); }
@@ -113,7 +115,7 @@ public class GameRepository {
         }
     }
 
-    // New: Synchronous method to get all chapter titles and their total scores
+    // Synchronous method to get all chapter titles and their total scores
     public List<Map<String, Object>> getChapterScoresSummarySync() {
         List<Map<String, Object>> summaries = new ArrayList<>();
         List<Chapter> allChapters = getAllChaptersNonLiveSync(); // Get all chapters synchronously
@@ -142,41 +144,68 @@ public class GameRepository {
     public void populateInitialData() {
         databaseWriteExecutor.execute(() -> {
             if (chapterDao.countChapters() == 0) {
-                List<Chapter> chapters = Arrays.asList(
-                        new Chapter("Chapter 1: Animals", "https://via.placeholder.com/150/0000FF/FFFFFF?text=Animals", true),
-                        new Chapter("Chapter 2: Fruits", "https://via.placeholder.com/150/FF0000/FFFFFF?text=Fruits", false),
-                        new Chapter("Chapter 3: Objects", "https://via.placeholder.com/150/00FF00/000000?text=Objects", false),
-                        new Chapter("Chapter 4: Places", "https://via.placeholder.com/150/FFFF00/000000?text=Places", false),
-                        new Chapter("Chapter 5: Vehicles", "https://via.placeholder.com/150/00FFFF/000000?text=Vehicles", false)
-                );
-                chapterDao.insertAll(chapters);
+                // --- Chapter 1: HTML Dasar ---
+                Chapter chapter1 = new Chapter("Chapter 1: HTML Dasar", "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML", true);
+                long chapter1IdLong = chapterDao.insert(chapter1); // <-- DAPATKAN ID YANG DIHASILKAN
+                int chapter1Id = (int) chapter1IdLong; // Konversi ke int
 
-                // Assuming chapter IDs are 1-based after insertion.
-                List<Level> levelsChapter1 = Arrays.asList(
-                        new Level(1, 1, false, 0), new Level(1, 2, false, 0),
-                        new Level(1, 3, false, 0), new Level(1, 4, false, 0),
-                        new Level(1, 5, false, 0)
-                );
-                levelDao.insertAll(levelsChapter1);
+                Level level1_1 = new Level(chapter1Id, 1, false, 0);
+                long level1_1IdLong = levelDao.insert(level1_1); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level1_1Id = (int) level1_1IdLong;
+                questionDao.insert(new Question(level1_1Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+A", "Tautan (link)"));
 
-                List<Level> levelsChapter2 = Arrays.asList(
-                        new Level(2, 1, false, 0), new Level(2, 2, false, 0),
-                        new Level(2, 3, false, 0), new Level(2, 4, false, 0),
-                        new Level(2, 5, false, 0)
-                );
-                levelDao.insertAll(levelsChapter2);
+                Level level1_2 = new Level(chapter1Id, 2, false, 0);
+                long level1_2IdLong = levelDao.insert(level1_2); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level1_2Id = (int) level1_2IdLong;
+                questionDao.insert(new Question(level1_2Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+IMG", "Gambar"));
 
-                List<Question> questionsLevel1_1 = Arrays.asList(
-                        new Question(1, "https://via.placeholder.com/150/0000FF/FFFFFF?text=Cat", "kucing"),
-                        new Question(1, "https://via.placeholder.com/150/FF0000/FFFFFF?text=Dog", "anjing")
-                );
-                questionDao.insertAll(questionsLevel1_1);
+                Level level1_3 = new Level(chapter1Id, 3, false, 0);
+                long level1_3IdLong = levelDao.insert(level1_3); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level1_3Id = (int) level1_3IdLong;
+                questionDao.insert(new Question(level1_3Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+TAG", "<html>"));
 
-                List<Question> questionsLevel1_2 = Arrays.asList(
-                        new Question(2, "https://via.placeholder.com/150/00FF00/000000?text=Apple", "apel"),
-                        new Question(2, "https://via.placeholder.com/150/FFFF00/000000?text=Banana", "pisang")
-                );
-                questionDao.insertAll(questionsLevel1_2);
+
+                // --- Chapter 2: Perangkat Keras Komputer ---
+                Chapter chapter2 = new Chapter("Chapter 2: Perangkat Keras Komputer", "https://via.placeholder.com/150/00FF00/000000?text=Hardware", false);
+                long chapter2IdLong = chapterDao.insert(chapter2); // <-- DAPATKAN ID YANG DIHASILKAN
+                int chapter2Id = (int) chapter2IdLong;
+
+                Level level2_1 = new Level(chapter2Id, 1, false, 0);
+                long level2_1IdLong = levelDao.insert(level2_1); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level2_1Id = (int) level2_1IdLong;
+                questionDao.insert(new Question(level2_1Id, "https://via.placeholder.com/150/00FF00/000000?text=Keyboard", "Keyboard"));
+
+                Level level2_2 = new Level(chapter2Id, 2, false, 0);
+                long level2_2IdLong = levelDao.insert(level2_2); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level2_2Id = (int) level2_2IdLong;
+                questionDao.insert(new Question(level2_2Id, "https://via.placeholder.com/150/00FF00/000000?text=RAM", "Random Access Memory"));
+
+                Level level2_3 = new Level(chapter2Id, 3, false, 0);
+                long level2_3IdLong = levelDao.insert(level2_3); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level2_3Id = (int) level2_3IdLong;
+                questionDao.insert(new Question(level2_3Id, "https://via.placeholder.com/150/00FF00/000000?text=CPU", "CPU"));
+
+
+                // --- Chapter 3: Jaringan Komputer ---
+                Chapter chapter3 = new Chapter("Chapter 3: Jaringan Komputer", "https://via.placeholder.com/150/0000FF/FFFFFF?text=Network", false);
+                long chapter3IdLong = chapterDao.insert(chapter3); // <-- DAPATKAN ID YANG DIHASILKAN
+                int chapter3Id = (int) chapter3IdLong;
+
+                Level level3_1 = new Level(chapter3Id, 1, false, 0);
+                long level3_1IdLong = levelDao.insert(level3_1); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level3_1Id = (int) level3_1IdLong;
+                questionDao.insert(new Question(level3_1Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=LAN", "LAN"));
+
+                Level level3_2 = new Level(chapter3Id, 2, false, 0);
+                long level3_2IdLong = levelDao.insert(level3_2); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level3_2Id = (int) level3_2IdLong;
+                questionDao.insert(new Question(level3_2Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=Router", "Router"));
+
+                Level level3_3 = new Level(chapter3Id, 3, false, 0);
+                long level3_3IdLong = levelDao.insert(level3_3); // <-- DAPATKAN ID YANG DIHASILKAN
+                int level3_3Id = (int) level3_3IdLong;
+                questionDao.insert(new Question(level3_3Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=WiFi", "Wi-Fi"));
+
 
                 // Initial GameState
                 gameStateDao.insert(new GameState(MAX_LIVES, System.currentTimeMillis()));
