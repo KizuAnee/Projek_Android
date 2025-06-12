@@ -146,66 +146,84 @@ public class GameRepository {
             if (chapterDao.countChapters() == 0) {
                 // --- Chapter 1: HTML Dasar ---
                 Chapter chapter1 = new Chapter("Chapter 1: HTML Dasar", "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML", true);
-                long chapter1IdLong = chapterDao.insert(chapter1); // <-- DAPATKAN ID YANG DIHASILKAN
-                int chapter1Id = (int) chapter1IdLong; // Konversi ke int
+                long chapter1IdLong = chapterDao.insert(chapter1);
+                int chapter1Id = (int) chapter1IdLong;
 
                 Level level1_1 = new Level(chapter1Id, 1, false, 0);
-                long level1_1IdLong = levelDao.insert(level1_1); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level1_1IdLong = levelDao.insert(level1_1);
                 int level1_1Id = (int) level1_1IdLong;
-                questionDao.insert(new Question(level1_1Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+A", "Tautan (link)"));
+                // Perhatikan: Teks pertanyaan dengan [BLANK]
+                questionDao.insert(new Question(level1_1Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+A",
+                        "Perintah HTML <a> digunakan untuk membuat sebuah [BLANK].", // <--- Updated with [BLANK]
+                        "Tautan (link)"));
 
                 Level level1_2 = new Level(chapter1Id, 2, false, 0);
-                long level1_2IdLong = levelDao.insert(level1_2); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level1_2IdLong = levelDao.insert(level1_2);
                 int level1_2Id = (int) level1_2IdLong;
-                questionDao.insert(new Question(level1_2Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+IMG", "Gambar"));
+                questionDao.insert(new Question(level1_2Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+IMG",
+                        "Tag <img> digunakan untuk menampilkan [BLANK] di halaman web.", // <--- Updated with [BLANK]
+                        "Gambar"));
 
                 Level level1_3 = new Level(chapter1Id, 3, false, 0);
-                long level1_3IdLong = levelDao.insert(level1_3); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level1_3IdLong = levelDao.insert(level1_3);
                 int level1_3Id = (int) level1_3IdLong;
-                questionDao.insert(new Question(level1_3Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+TAG", "<html>"));
+                questionDao.insert(new Question(level1_3Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+TAG",
+                        "Dokumen HTML selalu diawali dengan tag [BLANK] dan diakhiri dengan tag penutupnya.", // <--- Updated with [BLANK]
+                        "<html>"));
 
 
                 // --- Chapter 2: Perangkat Keras Komputer ---
                 Chapter chapter2 = new Chapter("Chapter 2: Perangkat Keras Komputer", "https://via.placeholder.com/150/00FF00/000000?text=Hardware", false);
-                long chapter2IdLong = chapterDao.insert(chapter2); // <-- DAPATKAN ID YANG DIHASILKAN
+                long chapter2IdLong = chapterDao.insert(chapter2);
                 int chapter2Id = (int) chapter2IdLong;
 
                 Level level2_1 = new Level(chapter2Id, 1, false, 0);
-                long level2_1IdLong = levelDao.insert(level2_1); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level2_1IdLong = levelDao.insert(level2_1);
                 int level2_1Id = (int) level2_1IdLong;
-                questionDao.insert(new Question(level2_1Id, "https://via.placeholder.com/150/00FF00/000000?text=Keyboard", "Keyboard"));
+                questionDao.insert(new Question(level2_1Id, "https://via.placeholder.com/150/00FF00/000000?text=Keyboard",
+                        "Alat yang digunakan untuk mengetik huruf dan angka pada komputer disebut [BLANK].", // <--- Updated with [BLANK]
+                        "Keyboard"));
 
                 Level level2_2 = new Level(chapter2Id, 2, false, 0);
-                long level2_2IdLong = levelDao.insert(level2_2); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level2_2IdLong = levelDao.insert(level2_2);
                 int level2_2Id = (int) level2_2IdLong;
-                questionDao.insert(new Question(level2_2Id, "https://via.placeholder.com/150/00FF00/000000?text=RAM", "Random Access Memory"));
+                questionDao.insert(new Question(level2_2Id, "https://via.placeholder.com/150/00FF00/000000?text=RAM",
+                        "RAM merupakan singkatan dari [BLANK].", // <--- Updated with [BLANK]
+                        "Random Access Memory"));
 
                 Level level2_3 = new Level(chapter2Id, 3, false, 0);
-                long level2_3IdLong = levelDao.insert(level2_3); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level2_3IdLong = levelDao.insert(level2_3);
                 int level2_3Id = (int) level2_3IdLong;
-                questionDao.insert(new Question(level2_3Id, "https://via.placeholder.com/150/00FF00/000000?text=CPU", "CPU"));
+                questionDao.insert(new Question(level2_3Id, "https://via.placeholder.com/150/00FF00/000000?text=CPU",
+                        "Komponen utama yang menjalankan proses dan perintah di komputer adalah [BLANK].", // <--- Updated with [BLANK]
+                        "CPU"));
 
 
                 // --- Chapter 3: Jaringan Komputer ---
                 Chapter chapter3 = new Chapter("Chapter 3: Jaringan Komputer", "https://via.placeholder.com/150/0000FF/FFFFFF?text=Network", false);
-                long chapter3IdLong = chapterDao.insert(chapter3); // <-- DAPATKAN ID YANG DIHASILKAN
+                long chapter3IdLong = chapterDao.insert(chapter3);
                 int chapter3Id = (int) chapter3IdLong;
 
                 Level level3_1 = new Level(chapter3Id, 1, false, 0);
-                long level3_1IdLong = levelDao.insert(level3_1); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level3_1IdLong = levelDao.insert(level3_1);
                 int level3_1Id = (int) level3_1IdLong;
-                questionDao.insert(new Question(level3_1Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=LAN", "LAN"));
+                questionDao.insert(new Question(level3_1Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=LAN",
+                        "Jenis jaringan yang mencakup area kecil seperti dalam satu gedung disebut [BLANK]", // <--- Updated with [BLANK]
+                        "LAN"));
 
                 Level level3_2 = new Level(chapter3Id, 2, false, 0);
-                long level3_2IdLong = levelDao.insert(level3_2); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level3_2IdLong = levelDao.insert(level3_2);
                 int level3_2Id = (int) level3_2IdLong;
-                questionDao.insert(new Question(level3_2Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=Router", "Router"));
+                questionDao.insert(new Question(level3_2Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=Router",
+                        "Perangkat yang menghubungkan jaringan lokal ke internet disebut [BLANK]", // <--- Updated with [BLANK]
+                        "Router"));
 
                 Level level3_3 = new Level(chapter3Id, 3, false, 0);
-                long level3_3IdLong = levelDao.insert(level3_3); // <-- DAPATKAN ID YANG DIHASILKAN
+                long level3_3IdLong = levelDao.insert(level3_3);
                 int level3_3Id = (int) level3_3IdLong;
-                questionDao.insert(new Question(level3_3Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=WiFi", "Wi-Fi"));
-
+                questionDao.insert(new Question(level3_3Id, "https://via.placeholder.com/150/0000FF/FFFFFF?text=WiFi",
+                        "Simbol [BLANK] biasanya menunjukkan bahwa perangkat terhubung ke jaringan nirkabel.", // <--- Updated with [BLANK]
+                        "Wi-Fi"));
 
                 // Initial GameState
                 gameStateDao.insert(new GameState(MAX_LIVES, System.currentTimeMillis()));

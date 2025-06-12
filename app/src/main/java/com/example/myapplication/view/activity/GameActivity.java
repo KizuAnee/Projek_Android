@@ -31,6 +31,7 @@ public class GameActivity extends AppCompatActivity {
 
     private TextView tvQuestionNumber, tvTimer;
     private ImageView ivQuestionImage;
+    private TextView tvQuestionText; // NEW: Declare TextView for question text
     private EditText etAnswer;
     private Button btnCheckAnswer;
     private LivesView livesView;
@@ -50,9 +51,11 @@ public class GameActivity extends AppCompatActivity {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
         tvTimer = findViewById(R.id.tvTimer);
         ivQuestionImage = findViewById(R.id.ivQuestionImage);
+        tvQuestionText = findViewById(R.id.tvQuestionText); // NEW: Initialize tvQuestionText
         etAnswer = findViewById(R.id.etAnswer);
         btnCheckAnswer = findViewById(R.id.btnCheckAnswer);
         livesView = findViewById(R.id.livesView);
+
 
         // --- Retrieve Intent Extras ---
         currentLevelId = getIntent().getIntExtra("levelId", -1);
@@ -138,6 +141,21 @@ public class GameActivity extends AppCompatActivity {
             } else {
                 new ResultDialog("Incorrect! Try again.", "Try Again", () -> etAnswer.setText(""))
                         .show(getSupportFragmentManager(), "ResultDialog");
+            }
+        });
+
+        // --- Observe current question LiveData ---
+        gameViewModel.getCurrentQuestion().observe(this, question -> {
+            if (question != null) {
+                tvQuestionNumber.setText(String.format(Locale.getDefault(), "Question %d", gameViewModel.currentQuestionIndex));
+                Glide.with(GameActivity.this)
+                        .load(question.imageUrl)
+                        .placeholder(R.drawable.ic_placeholder_image)
+                        .into(ivQuestionImage);
+                tvQuestionText.setText(question.getQuestionText()); // <--- SET QUESTION TEXT HERE
+                etAnswer.setText("");
+            } else {
+                showLevelCompletionDialog();
             }
         });
 

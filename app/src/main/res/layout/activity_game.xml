@@ -54,31 +54,21 @@
         android:src="@drawable/ic_placeholder_image"
         android:background="@android:color/darker_gray"
         android:contentDescription="Question Image"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="32dp"
         android:elevation="4dp"/>
 
     <LinearLayout
-        android:id="@+id/llAnswerInput"
+        android:id="@+id/llQuestionContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="32dp"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="24dp">
-        <EditText
-            android:id="@+id/etAnswer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Type your answer"
-            android:inputType="textNoSuggestions"
-            android:maxLength="20"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:paddingVertical="12dp"
-            android:background="@drawable/underline_edit_text"
-            android:textColor="@color/black"
-            android:textColorHint="@android:color/darker_gray"/>
-    </LinearLayout>
+        android:gravity="center_horizontal"
+        android:background="@drawable/question_text_background"
+        android:padding="8dp"
+        android:wrapWith="horizontal"
+        />
 
     <Button
         android:id="@+id/btnCheckAnswer"
