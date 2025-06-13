@@ -57,17 +57,14 @@
         android:layout_marginBottom="32dp"
         android:elevation="4dp"/>
 
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/llQuestionContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="32dp"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:background="@drawable/question_text_background"
+        app:flexWrap="wrap"       app:justifyContent="center" app:alignItems="center"     android:background="@drawable/question_text_background"
         android:padding="8dp"
-        android:wrapWith="horizontal"
         />
 
     <Button

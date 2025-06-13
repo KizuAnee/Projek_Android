@@ -48,8 +48,6 @@ public class GameRepository {
     public LiveData<GameState> getGameState() { return gameStateDao.getGameState(); }
 
     // Insertion methods (async)
-    // IMPORTANT: These insert methods in DAO should return 'long' for auto-generated IDs
-    // Example: @Insert(onConflict = OnConflictStrategy.REPLACE) long insert(Chapter chapter);
     public void insertChapter(Chapter chapter) { databaseWriteExecutor.execute(() -> chapterDao.insert(chapter)); }
     public void insertAllChapters(List<Chapter> chapters) { databaseWriteExecutor.execute(() -> chapterDao.insertAll(chapters)); }
     public void insertLevel(Level level) { databaseWriteExecutor.execute(() -> levelDao.insert(level)); }
@@ -152,7 +150,6 @@ public class GameRepository {
                 Level level1_1 = new Level(chapter1Id, 1, false, 0);
                 long level1_1IdLong = levelDao.insert(level1_1);
                 int level1_1Id = (int) level1_1IdLong;
-                // Perhatikan: Teks pertanyaan dengan [BLANK]
                 questionDao.insert(new Question(level1_1Id, "https://via.placeholder.com/150/FF0000/FFFFFF?text=HTML+A",
                         "Perintah HTML <a> digunakan untuk membuat sebuah [BLANK].", // <--- Updated with [BLANK]
                         "Tautan (link)"));
