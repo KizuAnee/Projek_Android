@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@drawable/background">
+
+    <TextView
+        android:id="@+id/tvAboutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tentang Aplikasi"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvAboutContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Game Tebak Gambar: Komputer adalah aplikasi kuis seru yang menguji pengetahuanmu tentang perangkat keras, perangkat lunak, dan berbagai istilah dunia komputer. Cocok untuk pelajar, mahasiswa, atau siapa saja yang ingin belajar teknologi sambil bermain!"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/btnBackToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="⬅ Kembali ke Menu Utama"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#000000"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:elevation="4dp"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

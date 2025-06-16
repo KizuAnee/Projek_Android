@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
-    android:background="@android:color/white"
+    android:background="@drawable/background"
     tools:context=".view.activity.MainActivity">
 
     <TextView
@@ -15,7 +15,7 @@
         android:text="Guess The Image Game"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:layout_marginBottom="64dp"
         android:gravity="center"/>
 
@@ -23,6 +23,8 @@
         android:id="@+id/btnStartGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
         android:text="Start Game"
         android:textSize="18sp"
         android:paddingVertical="12dp"
@@ -32,6 +34,8 @@
         android:id="@+id/btnHelp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
         android:text="Help"
         android:textSize="18sp"
         android:paddingVertical="12dp"
@@ -41,6 +45,8 @@
         android:id="@+id/btnAbout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
         android:text="About"
         android:textSize="18sp"
         android:paddingVertical="12dp"/>

@@ -19,6 +19,7 @@ public class Question {
         this.answer = answer;
     }
 
+
     // Getters and Setters (pastikan ditambahkan untuk questionText juga)
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.model.data.Chapter;
 import com.example.myapplication.model.data.Level;

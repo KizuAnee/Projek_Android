@@ -2,14 +2,14 @@ package com.example.myapplication.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
 import com.example.myapplication.controller.GameViewModel;
+import com.example.myapplication.view.info.AboutActivity;
+import com.example.myapplication.view.info.HelpActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,10 +26,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnStartGame).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ChapterActivity.class)));
 
-        findViewById(R.id.btnHelp).setOnClickListener(v ->
-                Toast.makeText(MainActivity.this, "Help information will go here.", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnAbout).setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, AboutActivity.class));
+        });
 
-        findViewById(R.id.btnAbout).setOnClickListener(v ->
-                Toast.makeText(MainActivity.this, "About this game will go here.", Toast.LENGTH_SHORT).show());
+
+        findViewById(R.id.btnHelp).setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, HelpActivity.class));
+        });
+
     }
 }
