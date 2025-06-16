@@ -30,4 +30,27 @@ public class Level {
     public void setCompleted(boolean completed) { this.completed = completed; }
     public int getScore() { return score; }
     public void setScore(int score) { this.score = score; }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Level level = (Level) obj;
+
+        return id == level.id &&
+                chapterId == level.chapterId &&
+                levelNumber == level.levelNumber &&
+                completed == level.completed &&
+                score == level.score;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + chapterId;
+        result = 31 * result + levelNumber;
+        result = 31 * result + (completed ? 1 : 0);
+        result = 31 * result + score;
+        return result;
+    }
 }

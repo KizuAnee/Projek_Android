@@ -3,8 +3,9 @@ package com.example.myapplication.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast; // Added for locked toast
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -13,14 +14,14 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.controller.LevelViewModel; // Import LevelViewModel
+import com.example.myapplication.controller.LevelViewModel;
 import com.example.myapplication.model.data.Level;
 
 public class LevelAdapter extends ListAdapter<Level, LevelAdapter.LevelViewHolder> {
 
-    private OnLevelClickListener onClick;
-    private LevelViewModel levelViewModel; // Added ViewModel
-    private LifecycleOwner lifecycleOwner;   // Added LifecycleOwner
+    private final OnLevelClickListener onClick;
+    private final LevelViewModel levelViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     public interface OnLevelClickListener {
         void onLevelClick(Level level);
@@ -36,48 +37,54 @@ public class LevelAdapter extends ListAdapter<Level, LevelAdapter.LevelViewHolde
     @NonNull
     @Override
     public LevelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_level_button, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_level_button, parent, false);
         return new LevelViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LevelViewHolder holder, int position) {
         Level level = getItem(position);
-        holder.bind(level, onClick, levelViewModel, lifecycleOwner); // Pass new args
+        holder.bind(level, onClick, levelViewModel, lifecycleOwner);
     }
 
     static class LevelViewHolder extends RecyclerView.ViewHolder {
-        private Button btnLevel;
+        private final TextView tvLevelNumber;
+        private final ImageView ivLockIcon;
 
         public LevelViewHolder(@NonNull View itemView) {
             super(itemView);
-            btnLevel = itemView.findViewById(R.id.btnLevel);
+            tvLevelNumber = itemView.findViewById(R.id.tvLevelNumber);
+            ivLockIcon = itemView.findViewById(R.id.ivLockIcon);
         }
 
-        public void bind(Level level, OnLevelClickListener onClick, LevelViewModel levelViewModel, LifecycleOwner lifecycleOwner) {
-            btnLevel.setText(String.format("Level %d", level.getLevelNumber()));
+        public void bind(Level level, OnLevelClickListener onClick, LevelViewModel viewModel, LifecycleOwner owner) {
+            tvLevelNumber.setText(String.format("LEVEL %d", level.getLevelNumber()));
 
-            // Observe the unlocked status for this specific level
-            levelViewModel.isLevelUnlocked(level.getChapterId(), level.getLevelNumber()).observe(lifecycleOwner, isUnlocked -> {
-                btnLevel.setEnabled(isUnlocked);
-                if (isUnlocked) {
-                    btnLevel.setAlpha(1.0f);
-                    btnLevel.setOnClickListener(v -> onClick.onLevelClick(level));
+            viewModel.isLevelUnlocked(level.getChapterId(), level.getLevelNumber()).observe(owner, isUnlocked -> {
+                if (isUnlocked != null && isUnlocked) {
+                    tvLevelNumber.setAlpha(1.0f);
+                    tvLevelNumber.setClickable(true);
+                    ivLockIcon.setVisibility(View.GONE);
+
+                    tvLevelNumber.setOnClickListener(v -> onClick.onLevelClick(level));
                 } else {
-                    btnLevel.setAlpha(0.5f); // Make it semi-transparent
-                    btnLevel.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "This level is locked! Complete previous level to unlock.", Toast.LENGTH_SHORT).show());
+                    tvLevelNumber.setAlpha(0.5f);
+                    tvLevelNumber.setClickable(true);
+                    ivLockIcon.setVisibility(View.VISIBLE);
+
+                    tvLevelNumber.setOnClickListener(v ->
+                            Toast.makeText(itemView.getContext(), "Level ini terkunci. Selesaikan level sebelumnya untuk membuka.", Toast.LENGTH_SHORT).show());
+                }
+
+                // Update warna untuk status selesai
+                if (level.isCompleted()) {
+                    tvLevelNumber.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.material_dynamic_primary40));
+                    tvLevelNumber.setTextColor(itemView.getContext().getResources().getColor(R.color.white));
+                } else {
+                    tvLevelNumber.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.material_dynamic_neutral90));
+                    tvLevelNumber.setTextColor(itemView.getContext().getResources().getColor(R.color.black));
                 }
             });
-
-            // Indicate if level is completed
-            if (level.isCompleted()) {
-                btnLevel.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.material_dynamic_primary40));
-                btnLevel.setTextColor(itemView.getContext().getResources().getColor(R.color.white));
-            } else {
-                btnLevel.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.material_dynamic_neutral90));
-                btnLevel.setTextColor(itemView.getContext().getResources().getColor(R.color.black));
-            }
         }
     }
 

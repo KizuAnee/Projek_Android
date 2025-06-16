@@ -1,11 +1,12 @@
 package com.example.myapplication.view.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast; // Added for locked toast
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -15,14 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.controller.ChapterViewModel; // Import ChapterViewModel
+import com.example.myapplication.controller.ChapterViewModel;
 import com.example.myapplication.model.data.Chapter;
 
 public class ChapterAdapter extends ListAdapter<Chapter, ChapterAdapter.ChapterViewHolder> {
 
     private OnChapterClickListener onClick;
-    private ChapterViewModel chapterViewModel; // Added ViewModel
-    private LifecycleOwner lifecycleOwner;     // Added LifecycleOwner
+    private ChapterViewModel chapterViewModel;
+    private LifecycleOwner lifecycleOwner;
 
     public interface OnChapterClickListener {
         void onChapterClick(Chapter chapter);
@@ -46,44 +47,63 @@ public class ChapterAdapter extends ListAdapter<Chapter, ChapterAdapter.ChapterV
     @Override
     public void onBindViewHolder(@NonNull ChapterViewHolder holder, int position) {
         Chapter chapter = getItem(position);
-        holder.bind(chapter, onClick, chapterViewModel, lifecycleOwner); // Pass new args
+        holder.bind(chapter, onClick, chapterViewModel, lifecycleOwner);
     }
 
     static class ChapterViewHolder extends RecyclerView.ViewHolder {
         private TextView tvChapterTitle;
         private ImageView ivChapterImage;
-        // private View overlayLocked; // If you add an overlay in XML, declare it here
 
         public ChapterViewHolder(@NonNull View itemView) {
             super(itemView);
             tvChapterTitle = itemView.findViewById(R.id.tvChapterTitle);
             ivChapterImage = itemView.findViewById(R.id.ivChapterImage);
-            // overlayLocked = itemView.findViewById(R.id.overlayLocked);
         }
 
         public void bind(Chapter chapter, OnChapterClickListener onClick, ChapterViewModel chapterViewModel, LifecycleOwner lifecycleOwner) {
             tvChapterTitle.setText(chapter.getTitle());
-            Glide.with(itemView.getContext())
-                    .load(chapter.getImageUrl() != null && !chapter.getImageUrl().isEmpty() ? chapter.getImageUrl() : R.drawable.ic_placeholder_image)
-                    .placeholder(R.drawable.ic_placeholder_image)
-                    .into(ivChapterImage);
 
-            // Observe the unlocked status for this specific chapter
+            // Log data untuk debugging
+            Log.d("CHAPTER_BIND", "Chapter Title: " + chapter.getTitle());
+            Log.d("CHAPTER_BIND", "Image URL (name): " + chapter.getImageUrl());
+            Log.d("CHAPTER_BIND", "Image URL (from object): " + chapter.getImageUrl());
+
+
+            // Ambil ID resource drawable dari nama imageUrl
+            int imageResId = itemView.getContext().getResources()
+                    .getIdentifier(chapter.getImageUrl(), "drawable", itemView.getContext().getPackageName());
+
+            Log.d("CHAPTER_BIND", "Resolved imageResId: " + imageResId);
+
+            // Tampilkan gambar jika ID ditemukan, jika tidak tampilkan placeholder
+            if (imageResId != 0) {
+                Log.d("CHAPTER_BIND", "Loading image with Glide: " + chapter.getImageUrl());
+                Glide.with(itemView.getContext())
+                        .load(imageResId)
+                        .placeholder(R.drawable.ic_placeholder_image)
+                        .error(R.drawable.ic_placeholder_image)
+                        .into(ivChapterImage);
+            } else {
+                Log.e("CHAPTER_BIND", "Image not found! Using placeholder.");
+                ivChapterImage.setImageResource(R.drawable.ic_placeholder_image);
+            }
+
+            // Logika kunci/unlock seperti biasa
             chapterViewModel.isChapterUnlocked(chapter.getId()).observe(lifecycleOwner, isUnlocked -> {
-                chapter.setUnlocked(isUnlocked); // Update the chapter object directly
+                chapter.setUnlocked(isUnlocked);
                 itemView.setClickable(isUnlocked);
                 if (isUnlocked) {
                     itemView.setAlpha(1.0f);
-                    // if (overlayLocked != null) overlayLocked.setVisibility(View.GONE);
                     itemView.setOnClickListener(v -> onClick.onChapterClick(chapter));
                 } else {
-                    itemView.setAlpha(0.5f); // Make it semi-transparent
-                    // if (overlayLocked != null) overlayLocked.setVisibility(View.VISIBLE);
-                    itemView.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "This chapter is locked! Complete previous chapter to unlock.", Toast.LENGTH_SHORT).show());
+                    itemView.setAlpha(0.5f);
+                    itemView.setOnClickListener(v ->
+                            Toast.makeText(itemView.getContext(), "This chapter is locked! Complete previous chapter to unlock.", Toast.LENGTH_SHORT).show());
                 }
             });
         }
     }
+
 
     private static class ChapterDiffCallback extends DiffUtil.ItemCallback<Chapter> {
         @Override
