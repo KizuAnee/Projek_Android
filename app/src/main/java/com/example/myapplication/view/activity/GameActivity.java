@@ -2,9 +2,7 @@ package com.example.myapplication.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.Gravity;
-import android.view.ViewGroup;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -22,27 +19,21 @@ import com.example.myapplication.controller.ChapterViewModel;
 import com.example.myapplication.controller.LevelViewModel;
 import com.example.myapplication.model.data.Chapter;
 import com.example.myapplication.model.data.Level;
-import com.example.myapplication.model.data.Question;
 import com.example.myapplication.model.database.AppDatabase;
 import com.example.myapplication.view.customview.LivesView;
 import com.example.myapplication.view.dialog.ResultDialog;
-
-import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import android.util.Log; // <--- Import Log
 
 public class GameActivity extends AppCompatActivity {
 
-    private static final String TAG = "GameActivity"; // <--- Tag untuk Logcat
-
     private TextView tvQuestionNumber, tvTimer;
     private ImageView ivQuestionImage;
-    private FlexboxLayout llQuestionContainer;
-    private EditText etDynamicAnswer;
+    private TextView tvQuestionText; // NEW: Declare TextView for question text
+    private EditText etAnswer;
     private Button btnCheckAnswer;
     private LivesView livesView;
 
@@ -51,8 +42,6 @@ public class GameActivity extends AppCompatActivity {
     private ChapterViewModel chapterViewModel;
     private int currentLevelId;
     private int currentPlayingChapterId;
-
-    private static final String BLANK_MARKER = "[BLANK]";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +52,11 @@ public class GameActivity extends AppCompatActivity {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
         tvTimer = findViewById(R.id.tvTimer);
         ivQuestionImage = findViewById(R.id.ivQuestionImage);
-        llQuestionContainer = findViewById(R.id.llQuestionContainer);
+        tvQuestionText = findViewById(R.id.tvQuestionText); // NEW: Initialize tvQuestionText
+        etAnswer = findViewById(R.id.etAnswer);
         btnCheckAnswer = findViewById(R.id.btnCheckAnswer);
         livesView = findViewById(R.id.livesView);
+
 
         // --- Retrieve Intent Extras ---
         currentLevelId = getIntent().getIntExtra("levelId", -1);
@@ -87,30 +78,40 @@ public class GameActivity extends AppCompatActivity {
         gameViewModel.setCurrentPlayingChapterId(currentPlayingChapterId);
 
         // --- Load initial questions for the level first ---
+        // Call loadQuestionsForLevel BEFORE setting up the observer that might react to null.
+        // The observer is set up immediately, but the _currentQuestion MutableLiveData
+        // will only be updated by loadQuestionsForLevel, preventing the initial null trigger.
         gameViewModel.loadQuestionsForLevel(currentLevelId);
 
-        // NEW: Observe current question number for display (fixes "Question 0" issue)
-        gameViewModel.getCurrentQuestionNumberForDisplay().observe(this, questionNumber -> {
-            Log.d(TAG, "Observer _currentQuestionNumberForDisplay fired. questionNumber: " + questionNumber);
-            tvQuestionNumber.setText(String.format(Locale.getDefault(), "Question %d", questionNumber));
-        });
 
         // --- Observe current question LiveData ---
+        // This observer will now correctly react to the question being loaded (not null)
+        // or to null only *after* all questions have been iterated.
         gameViewModel.getCurrentQuestion().observe(this, question -> {
-            Log.d(TAG, "Observer _currentQuestion fired. Question: " + (question != null ? question.getQuestionText() : "null"));
             if (question != null) {
+                tvQuestionNumber.setText(String.format(Locale.getDefault(), "Question %d", gameViewModel.currentQuestionIndex));
+
+                int resId = getResources().getIdentifier(question.getImageUrl(), "drawable", getPackageName());
+                Log.d("GameActivity", "Loading question image: " + question.getImageUrl() + " (resId: " + resId + ")");
+
                 Glide.with(GameActivity.this)
-                        .load(question.imageUrl)
+                        .load(resId)
                         .placeholder(R.drawable.ic_placeholder_image)
                         .into(ivQuestionImage);
-                displayQuestionWithBlankInput(question.getQuestionText());
+
+
+                tvQuestionText.setText(question.getQuestionText());
+                etAnswer.setText("");
             } else {
-                Log.d(TAG, "Question is null, showing Level Completion Dialog.");
                 showLevelCompletionDialog();
             }
         });
 
-        // ... (Observe timer LiveData and lives LiveData - remains the same) ...
+
+
+
+
+        // --- Observe timer LiveData ---
         gameViewModel.getTimerMillisRemaining().observe(this, millis -> {
             long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
             long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) -
@@ -122,6 +123,7 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
+        // --- Observe lives LiveData ---
         gameViewModel.getLives().observe(this, lives -> {
             livesView.setLives(lives);
             if (lives <= 0) {
@@ -135,11 +137,7 @@ public class GameActivity extends AppCompatActivity {
 
         // --- Set Check Answer Button Listener ---
         btnCheckAnswer.setOnClickListener(v -> {
-            String userAnswer = "";
-            if (etDynamicAnswer != null) {
-                userAnswer = etDynamicAnswer.getText().toString();
-            }
-
+            String userAnswer = etAnswer.getText().toString();
             if (userAnswer.isEmpty()) {
                 Toast.makeText(this, "Please enter an answer.", Toast.LENGTH_SHORT).show();
                 return;
@@ -148,82 +146,22 @@ public class GameActivity extends AppCompatActivity {
             boolean isCorrect = gameViewModel.checkAnswer(userAnswer);
 
             if (isCorrect) {
-                Log.d(TAG, "Answer Correct. Calling loadNextQuestion().");
                 new ResultDialog("Correct!", "Next Question", () -> gameViewModel.loadNextQuestion())
                         .show(getSupportFragmentManager(), "ResultDialog");
             } else {
-                Log.d(TAG, "Answer Incorrect. Resetting input.");
-                new ResultDialog("Incorrect! Try again.", "Try Again", () -> {
-                    if (etDynamicAnswer != null) etDynamicAnswer.setText("");
-                })
+                new ResultDialog("Incorrect! Try again.", "Try Again", () -> etAnswer.setText(""))
                         .show(getSupportFragmentManager(), "ResultDialog");
             }
         });
+
+        // --- Observe current question LiveData ---
+        // Removed: gameViewModel.loadQuestionsForLevel(currentLevelId); from here
+        // It's now called earlier, before the observer.
     }
 
     /**
-     * Dynamically displays the question text, replacing [BLANK] with an EditText.
-     * @param questionText The full question text from the database containing [BLANK].
+     * Called when all questions in the current level have been answered.
      */
-    private void displayQuestionWithBlankInput(String questionText) {
-        llQuestionContainer.removeAllViews(); // Clear previous question elements
-
-        String[] parts = questionText.split(BLANK_MARKER, -1);
-
-        if (parts.length > 0 && !parts[0].isEmpty()) {
-            TextView tvPrefix = createTextView(parts[0]);
-            llQuestionContainer.addView(tvPrefix);
-        }
-
-        etDynamicAnswer = createEditTextForBlank();
-        llQuestionContainer.addView(etDynamicAnswer);
-
-        if (parts.length > 1 && !parts[1].isEmpty()) {
-            TextView tvSuffix = createTextView(parts[1]);
-            llQuestionContainer.addView(tvSuffix);
-        }
-    }
-
-    /**
-     * Helper method to create a TextView for question parts.
-     */
-    private TextView createTextView(String text) {
-        TextView textView = new TextView(this);
-        textView.setLayoutParams(new FlexboxLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setText(text);
-        textView.setTextSize(22);
-        textView.setTextColor(ContextCompat.getColor(this, R.color.black));
-        return textView;
-    }
-
-    /**
-     * Helper method to create an EditText for the blank input.
-     */
-    private EditText createEditTextForBlank() {
-        EditText editText = new EditText(this);
-        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(
-                (int) (8 * getResources().getDisplayMetrics().density), // left margin
-                0,
-                (int) (8 * getResources().getDisplayMetrics().density), // right margin
-                0);
-        editText.setLayoutParams(params);
-        editText.setBackgroundResource(R.drawable.underline_edit_text);
-        editText.setSingleLine(true);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        editText.setGravity(Gravity.CENTER);
-        editText.setTextSize(22);
-        editText.setTextColor(ContextCompat.getColor(this, R.color.black));
-        editText.setMinWidth((int) (80 * getResources().getDisplayMetrics().density));
-        editText.setMaxLines(1);
-
-        return editText;
-    }
-
     private void showLevelCompletionDialog() {
         int finalScore = gameViewModel.getFinalLevelScore();
         gameViewModel.markLevelCompleted(currentLevelId, finalScore);
@@ -262,6 +200,9 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Helper to navigate back to Level or Chapter list after level completion.
+     */
     private void navigateToLevelOrChapterList(int finalScore) {
         new ResultDialog("Level Completed!\nScore: " + finalScore, "Continue", () -> {
             Intent intent = new Intent(GameActivity.this, LevelActivity.class);
@@ -272,6 +213,9 @@ public class GameActivity extends AppCompatActivity {
         }).show(getSupportFragmentManager(), "LevelCompletionDialog");
     }
 
+    /**
+     * Displays the summary of scores across all chapters when the entire game is completed.
+     */
     private void showGameCompletionSummary() {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             List<Map<String, Object>> chapterSummaries = gameViewModel.getChapterScoresSummarySync();

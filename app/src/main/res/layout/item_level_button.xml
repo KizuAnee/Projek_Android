@@ -1,12 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/btnLevel"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:text="Level 1"
-    android:textSize="20sp"
-    android:paddingVertical="12dp"
-    android:backgroundTint="@color/material_dynamic_neutral90"
-    android:textColor="@color/black"
-    />
+    android:layout_marginBottom="8dp"
+    android:padding="8dp">
+
+    <!-- Tombol Level -->
+    <Button
+        android:id="@+id/tvLevelNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LEVEL 1"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingVertical="12dp"
+        android:background="@color/white"
+        android:textColor="@android:color/white" />
+
+    <!-- Icon Kunci -->
+    <ImageView
+        android:id="@+id/ivLockIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_lock"
+        android:visibility="visible"
+        app:tint="@android:color/black" />
+
+</FrameLayout>

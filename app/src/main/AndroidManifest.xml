@@ -26,6 +26,8 @@
         <activity android:name=".view.activity.ChapterActivity" />
         <activity android:name=".view.activity.LevelActivity" />
         <activity android:name=".view.activity.GameActivity" />
+        <activity android:name=".view.info.AboutActivity" />
+        <activity android:name=".view.info.HelpActivity" />
     </application>
 
 </manifest>

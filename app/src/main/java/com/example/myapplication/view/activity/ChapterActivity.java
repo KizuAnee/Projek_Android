@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.controller.ChapterViewModel; // Import new ViewModel
-import com.example.myapplication.model.data.Chapter;
 import com.example.myapplication.view.adapter.ChapterAdapter;
 
 public class ChapterActivity extends AppCompatActivity {
@@ -20,6 +19,9 @@ public class ChapterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        deleteDatabase("guess_image_db");
+
         setContentView(R.layout.activity_chapter);
 
         chapterViewModel = new ViewModelProvider(this).get(ChapterViewModel.class); // Get ChapterViewModel
