@@ -1,7 +1,6 @@
-# Guess The Image Game: Komputer 🧠💻🕹️
+# Game Tebak Gambar Informatika🧠💻🕹️
 
-![Screenshot Aplikasi](https://via.placeholder.com/600x400?text=Screenshot+Game+Android+Anda+Di+Sini)
-*Ganti URL gambar ini dengan screenshot aplikasi Anda yang sebenarnya!*
+![Aplikasi](iconAPK.png)
 
 [![Android API Level](https://img.shields.io/badge/API%20Level-24%2B-brightgreen.svg)](https://developer.android.com/about/dashboards)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -41,14 +40,12 @@ Ikuti langkah-langkah ini untuk menjalankan proyek di lingkungan pengembangan An
 
 1.  **Clone Repositori:**
     ```bash
-    git clone [https://github.com/USERNAME_ANDA/NAMA_REPO_ANDA.git](https://github.com/USERNAME_ANDA/NAMA_REPO_ANDA.git)
-    cd NAMA_REPO_ANDA
+    git clone [https://github.com/KizuAnee/Projek_Android.git](https://github.com/KizuAnee/Projek_Android)
     ```
-    *Ganti `USERNAME_ANDA` dan `NAMA_REPO_ANDA` dengan detail repositori Anda.*
 
 2.  **Buka di Android Studio:**
     * Buka Android Studio.
-    * Pilih `File > Open` dan navigasikan ke direktori `NAMA_REPO_ANDA` yang baru saja Anda clone.
+    * Pilih `File > Open` dan navigasikan ke direktori `Projek_Android` yang baru saja Anda clone.
 
 3.  **Build dan Jalankan Aplikasi:**
     * Setelah Android Studio selesai meng-index proyek, klik tombol `Run` (ikon segitiga hijau) di toolbar. Pilih emulator atau perangkat fisik Anda.
@@ -110,9 +107,17 @@ dependencies {
     // FlexboxLayout for flexible wrapping UI
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 }
-
+```
 🤝 Kontribusi
 Kontribusi disambut baik! Jika Anda menemukan bug atau memiliki saran perbaikan, silakan buka issue atau kirim pull request.
 
 📄 Lisensi
 Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file LICENSE untuk detail lebih lanjut.
+
+# Projek ini dikerjakan oleh:
+- Amanda Putri			      (2310131220007)
+- Muhammad Farros Shofiy 		(2310131310005)
+- Muhammad Syauqoni		      (2310131310007)
+- Muhammad Rekha Maulidan	   (1910131210005)
+
+PEMROGRAMAN PERANGKAT BERGERAK - PILKOM - 2025
