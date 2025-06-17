@@ -6,37 +6,55 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center"
-    android:background="@drawable/background">
+    android:background="@drawable/bgpik">
 
     <TextView
         android:id="@+id/tvAboutTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="267dp"
+        android:layout_height="143dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ovalbox"
+        android:gravity="center"
+        android:lineSpacingExtra="10dp"
         android:text="Tentang Aplikasi"
-        android:textSize="26sp"
-        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:shadowColor="@color/bright_blue"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="5"/>
 
     <TextView
         android:id="@+id/tvAboutContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Game Tebak Gambar: Komputer adalah aplikasi kuis seru yang menguji pengetahuanmu tentang perangkat keras, perangkat lunak, dan berbagai istilah dunia komputer. Cocok untuk pelajar, mahasiswa, atau siapa saja yang ingin belajar teknologi sambil bermain!"
-        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="469dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bigbox"
+        android:gravity="center"
+        android:lineSpacingExtra="10dp"
+        android:padding="70dp"
+        android:shadowColor="@color/bright_blue"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="5"
+        android:text="Teks"
         android:textColor="#FFFFFF"
-        android:lineSpacingExtra="4dp"
-        android:layout_marginBottom="32dp" />
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btnBackToMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="⬅ Kembali ke Menu Utama"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#000000"
+        android:backgroundTint="@color/bright_blue"
+        android:textColor="#FFFFFF"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
         android:elevation="4dp"
-        android:layout_marginTop="8dp" />
+        android:shadowColor="@color/bright_blue"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="5"/>
+
 </LinearLayout>

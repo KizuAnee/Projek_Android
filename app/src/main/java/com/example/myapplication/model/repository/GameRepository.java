@@ -64,11 +64,11 @@ public class GameRepository {
     public void updateGameState(GameState gameState) { databaseWriteExecutor.execute(() -> gameStateDao.update(gameState)); }
 
 
-    // Synchronous fetch methods (for background thread use only, e.g., in GameViewModel's background tasks)
+    // Synchronous fetch methods (for background thread use only)
     public Chapter getChapterByIdSync(int chapterId) {
         Future<Chapter> future = databaseWriteExecutor.submit(() -> chapterDao.getChapterById(chapterId));
         try {
-            return future.get(); // Blocks until result is available
+            return future.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;
@@ -115,6 +115,26 @@ public class GameRepository {
         }
     }
 
+    // NEW METHOD: Get total score for a specific chapter synchronously
+    public int getTotalScoreForChapterSync(int chapterId) {
+        Future<Integer> future = databaseWriteExecutor.submit(() -> {
+            List<Level> levelsInChapter = levelDao.getLevelsForChapterNonLive(chapterId); // Use non-live DAO method
+            int totalScore = 0;
+            if (levelsInChapter != null) {
+                for (Level level : levelsInChapter) {
+                    totalScore += level.getScore();
+                }
+            }
+            return totalScore;
+        });
+        try {
+            return future.get(); // Blocks until result is available
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return 0; // Return 0 on error
+        }
+    }
+
     // Synchronous method to get all chapter titles and their total scores
     public List<Map<String, Object>> getChapterScoresSummarySync() {
         List<Map<String, Object>> summaries = new ArrayList<>();
@@ -152,23 +172,23 @@ public class GameRepository {
                 Level level1_1 = new Level(chapter1Id, 1, false, 0);
                 long level1_1IdLong = levelDao.insert(level1_1);
                 int level1_1Id = (int) level1_1IdLong;
-                // Perhatikan: Teks pertanyaan dengan [BLANK]
+                // Perhatikan: Teks pertanyaan dengan ____
                 questionDao.insert(new Question(level1_1Id, "taga",
-                        "Perintah HTML <a> digunakan untuk membuat sebuah [BLANK].", // <--- Updated with [BLANK]
+                        "Perintah HTML <a> digunakan untuk membuat sebuah ____.", // <--- Updated with ____
                         "Tautan (link)"));
 
                 Level level1_2 = new Level(chapter1Id, 2, false, 0);
                 long level1_2IdLong = levelDao.insert(level1_2);
                 int level1_2Id = (int) level1_2IdLong;
                 questionDao.insert(new Question(level1_2Id, "tagimg",
-                        "Tag <img> digunakan untuk menampilkan [BLANK] di halaman web.", // <--- Updated with [BLANK]
+                        "Tag <img> digunakan untuk menampilkan ____ di halaman web.", // <--- Updated with ____
                         "Gambar"));
 
                 Level level1_3 = new Level(chapter1Id, 3, false, 0);
                 long level1_3IdLong = levelDao.insert(level1_3);
                 int level1_3Id = (int) level1_3IdLong;
                 questionDao.insert(new Question(level1_3Id, "taghtml",
-                        "Dokumen HTML selalu diawali dengan tag [BLANK] dan diakhiri dengan tag penutupnya.", // <--- Updated with [BLANK]
+                        "Dokumen HTML selalu diawali dengan tag ____ dan diakhiri dengan tag penutupnya.", // <--- Updated with ____
                         "<html>"));
 
 
@@ -181,21 +201,21 @@ public class GameRepository {
                 long level2_1IdLong = levelDao.insert(level2_1);
                 int level2_1Id = (int) level2_1IdLong;
                 questionDao.insert(new Question(level2_1Id, "keyboard",
-                        "Alat yang digunakan untuk mengetik huruf dan angka pada komputer disebut [BLANK].", // <--- Updated with [BLANK]
+                        "Alat yang digunakan untuk mengetik huruf dan angka pada komputer disebut ____.", // <--- Updated with ____
                         "Keyboard"));
 
                 Level level2_2 = new Level(chapter2Id, 2, false, 0);
                 long level2_2IdLong = levelDao.insert(level2_2);
                 int level2_2Id = (int) level2_2IdLong;
                 questionDao.insert(new Question(level2_2Id, "ram",
-                        "RAM merupakan singkatan dari [BLANK].", // <--- Updated with [BLANK]
+                        "RAM merupakan singkatan dari ____.", // <--- Updated with ____
                         "Random Access Memory"));
 
                 Level level2_3 = new Level(chapter2Id, 3, false, 0);
                 long level2_3IdLong = levelDao.insert(level2_3);
                 int level2_3Id = (int) level2_3IdLong;
                 questionDao.insert(new Question(level2_3Id, "cpu",
-                        "Komponen utama yang menjalankan proses dan perintah di komputer adalah [BLANK].", // <--- Updated with [BLANK]
+                        "Komponen utama yang menjalankan proses dan perintah di komputer adalah ____.", // <--- Updated with ____
                         "CPU"));
 
 
@@ -208,21 +228,21 @@ public class GameRepository {
                 long level3_1IdLong = levelDao.insert(level3_1);
                 int level3_1Id = (int) level3_1IdLong;
                 questionDao.insert(new Question(level3_1Id, "lan",
-                        "Jenis jaringan yang mencakup area kecil seperti dalam satu gedung disebut [BLANK]", // <--- Updated with [BLANK]
+                        "Jenis jaringan yang mencakup area kecil seperti dalam satu gedung disebut ____", // <--- Updated with ____
                         "LAN"));
 
                 Level level3_2 = new Level(chapter3Id, 2, false, 0);
                 long level3_2IdLong = levelDao.insert(level3_2);
                 int level3_2Id = (int) level3_2IdLong;
                 questionDao.insert(new Question(level3_2Id, "router",
-                        "Perangkat yang menghubungkan jaringan lokal ke internet disebut [BLANK]", // <--- Updated with [BLANK]
+                        "Perangkat yang menghubungkan jaringan lokal ke internet disebut ____", // <--- Updated with ____
                         "Router"));
 
                 Level level3_3 = new Level(chapter3Id, 3, false, 0);
                 long level3_3IdLong = levelDao.insert(level3_3);
                 int level3_3Id = (int) level3_3IdLong;
                 questionDao.insert(new Question(level3_3Id, "wifi",
-                        "Simbol [BLANK] biasanya menunjukkan bahwa perangkat terhubung ke jaringan nirkabel.", // <--- Updated with [BLANK]
+                        "Simbol ____ biasanya menunjukkan bahwa perangkat terhubung ke jaringan nirkabel.", // <--- Updated with ____
                         "Wi-Fi"));
 
                 // Initial GameState

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="16dp"
-    android:background="@drawable/background"
+    android:background="@drawable/bgpik"
     tools:context=".view.activity.GameActivity">
 
     <LinearLayout
@@ -22,20 +22,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Question 1"
-            android:textSize="20sp"
+            android:text="Soal 1"
+            android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:shadowColor="@color/bright_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="7"/>
 
         <TextView
             android:id="@+id/tvTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="02:00"
+            android:textColor="@color/timer_red"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@color/timer_red"
-            android:layout_marginStart="16dp" />
+            android:background="@drawable/border_white"
+            android:padding="8dp" />
 
         <com.example.myapplication.view.customview.LivesView
             android:id="@+id/livesView"
@@ -52,7 +58,7 @@
         android:layout_height="280dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_placeholder_image"
-        android:background="@android:color/darker_gray"
+        android:background="@drawable/bg_blue_with_white_border"
         android:contentDescription="Question Image"
         android:layout_marginBottom="32dp"
         android:elevation="4dp" />
@@ -75,7 +81,11 @@
             android:text="Question text will appear here"
             android:textSize="18sp"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp"
+            android:shadowColor="@color/white"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="5"/>
 
         <EditText
             android:id="@+id/etAnswer"
@@ -90,10 +100,18 @@
     <Button
         android:id="@+id/btnCheckAnswer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Check Answer"
-        android:textSize="18sp"
+        android:layout_height="109dp"
+        android:background="@drawable/ovalbox"
+        android:gravity="center"
+        android:lineSpacingExtra="5dp"
         android:paddingHorizontal="32dp"
-        android:paddingVertical="12dp" />
+        android:paddingVertical="12dp"
+        android:text="Cek jawaban"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:shadowColor="@color/bright_blue"
+        android:shadowDx="0"
+        android:shadowDy="7"
+        android:shadowRadius="7"/>
 
 </LinearLayout>

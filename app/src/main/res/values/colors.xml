@@ -5,4 +5,6 @@
     <color name="material_dynamic_primary40">#6200EE</color>
     <color name="material_dynamic_neutral90">#E0E0E0</color>
     <color name="timer_red">#FF0000</color>
+    <color name="bright_blue">#4E08FF</color>
+
 </resources>

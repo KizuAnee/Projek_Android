@@ -20,6 +20,10 @@
         android:text="5"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:shadowColor="@color/bright_blue"
+        android:shadowDx="0"
+        android:shadowDy="7"
+        android:shadowRadius="7"/>
 
 </LinearLayout>

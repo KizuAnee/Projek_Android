@@ -89,7 +89,6 @@ public class GameActivity extends AppCompatActivity {
         // or to null only *after* all questions have been iterated.
         gameViewModel.getCurrentQuestion().observe(this, question -> {
             if (question != null) {
-                tvQuestionNumber.setText(String.format(Locale.getDefault(), "Question %d", gameViewModel.currentQuestionIndex));
 
                 int resId = getResources().getIdentifier(question.getImageUrl(), "drawable", getPackageName());
                 Log.d("GameActivity", "Loading question image: " + question.getImageUrl() + " (resId: " + resId + ")");

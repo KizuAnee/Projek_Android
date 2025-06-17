@@ -1,41 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
-    android:background="@drawable/background">
-
-    <TextView
-        android:id="@+id/tvHelpTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tentang Aplikasi"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:id="@+id/tvHelpContent"
+    android:background="@drawable/bgpik"
+    android:fillViewport="true">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tebak Gambar: Komputer adalah aplikasi kuis edukatif yang menguji seberapa baik kamu mengenali perangkat keras, perangkat lunak, dan istilah komputer melalui gambar. Aplikasi ini cocok untuk pelajar, mahasiswa, atau siapa saja yang ingin belajar dunia teknologi dengan cara menyenangkan!"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:lineSpacingExtra="5dp"
-        android:layout_marginBottom="32dp" />
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal"
+        tools:context=".view.info.HelpActivity">
 
-    <Button
-        android:id="@+id/btnBackToMain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="⬅ Kembali ke Menu Utama"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#000000"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="12dp"
-        android:elevation="4dp" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvHelpTitle"
+            android:layout_width="267dp"
+            android:layout_height="143dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/ovalbox"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:shadowColor="@color/bright_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="5"
+            android:text="Bantuan"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvHelpContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/bigbox"
+            android:gravity="center"
+            android:lineSpacingExtra="10dp"
+            android:padding="70dp"
+            android:shadowColor="@color/bright_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="5"
+            android:text="Konten bantuan akan dimuat di sini..."
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnBackToMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⬅ Kembali ke Menu Utama"
+            android:backgroundTint="@color/bright_blue"
+            android:textColor="#FFFFFF"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="12dp"
+            android:elevation="4dp"
+            android:shadowColor="@color/bright_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="5" />
+
+    </LinearLayout>
+
+</ScrollView>

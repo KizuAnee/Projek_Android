@@ -20,4 +20,8 @@
 
     <style name="Theme.GuessImageGame.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.MyApplication.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
 </resources>

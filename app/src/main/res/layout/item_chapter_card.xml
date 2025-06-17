@@ -11,37 +11,49 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/ivChapterImage"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_placeholder_image"
-            android:contentDescription="Chapter Image"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/tvChapterTitle"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Chapter Title Placeholder"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:gravity="center"/>
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="@drawable/border_overlay"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ivChapterImage"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_placeholder_image"
+                android:contentDescription="Chapter Image"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/tvChapterTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chapter Title Placeholder"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:gravity="center_vertical"
+                android:shadowColor="@color/bright_blue"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="9"/>
+        </LinearLayout>
 
         <View
             android:id="@+id/overlayLocked"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#80000000"
-            android:visibility="gone"/> </LinearLayout>
+            android:visibility="gone" />
+    </FrameLayout>
 
 </com.google.android.material.card.MaterialCardView>

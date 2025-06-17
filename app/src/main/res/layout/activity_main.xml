@@ -6,49 +6,65 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
-    android:background="@drawable/background"
+    android:background="@drawable/bgpik"
     tools:context=".view.activity.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guess The Image Game"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        android:layout_height="186dp"
         android:layout_marginBottom="64dp"
-        android:gravity="center"/>
+        android:background="@drawable/box"
+        android:gravity="center"
+        android:shadowColor="@color/bright_blue"
+        android:shadowDx="0"
+        android:shadowDy="7"
+        android:shadowRadius="7"
+        android:text="Tebak Gambar Informatika"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnStartGame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        android:text="Start Game"
-        android:textSize="18sp"
+        android:layout_width="280dp"
+        android:layout_height="191dp"
+        android:layout_marginBottom="2dp"
+        android:background="@null"
+        android:contentDescription="Play Button"
         android:paddingVertical="12dp"
-        android:layout_marginBottom="24dp"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/play" />
 
-    <Button
-        android:id="@+id/btnHelp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        android:text="Help"
-        android:textSize="18sp"
-        android:paddingVertical="12dp"
-        android:layout_marginBottom="24dp"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
 
-    <Button
-        android:id="@+id/btnAbout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        android:text="About"
-        android:textSize="18sp"
-        android:paddingVertical="12dp"/>
+        <ImageButton
+            android:id="@+id/btnHelp"
+            android:layout_width="157dp"
+            android:layout_height="127dp"
+            android:background="@null"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/helpp"
+            android:contentDescription="Help" />
+
+        <Space
+            android:layout_width="32dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/btnAbout"
+            android:layout_width="157dp"
+            android:layout_height="127dp"
+            android:background="@null"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/about"
+            android:contentDescription="About" />
+    </LinearLayout>
 
 </LinearLayout>
