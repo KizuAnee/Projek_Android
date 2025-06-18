@@ -26,10 +26,10 @@ public interface LevelDao {
     LiveData<Integer> getCompletedLevelsCountForChapter(int chapterId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(Level level); // <-- UBAH TIPE PENGEMBALIAN MENJADI long
+    long insert(Level level);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Level> levels); // Untuk List, biasanya void atau List<Long>
+    void insertAll(List<Level> levels);
 
     @Update
     void update(Level level);

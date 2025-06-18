@@ -32,7 +32,7 @@ public class GameActivity extends AppCompatActivity {
 
     private TextView tvQuestionNumber, tvTimer;
     private ImageView ivQuestionImage;
-    private TextView tvQuestionText; // NEW: Declare TextView for question text
+    private TextView tvQuestionText;
     private EditText etAnswer;
     private Button btnCheckAnswer;
     private LivesView livesView;
@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity {
         tvQuestionNumber = findViewById(R.id.tvQuestionNumber);
         tvTimer = findViewById(R.id.tvTimer);
         ivQuestionImage = findViewById(R.id.ivQuestionImage);
-        tvQuestionText = findViewById(R.id.tvQuestionText); // NEW: Initialize tvQuestionText
+        tvQuestionText = findViewById(R.id.tvQuestionText);
         etAnswer = findViewById(R.id.etAnswer);
         btnCheckAnswer = findViewById(R.id.btnCheckAnswer);
         livesView = findViewById(R.id.livesView);
@@ -78,15 +78,10 @@ public class GameActivity extends AppCompatActivity {
         gameViewModel.setCurrentPlayingChapterId(currentPlayingChapterId);
 
         // --- Load initial questions for the level first ---
-        // Call loadQuestionsForLevel BEFORE setting up the observer that might react to null.
-        // The observer is set up immediately, but the _currentQuestion MutableLiveData
-        // will only be updated by loadQuestionsForLevel, preventing the initial null trigger.
         gameViewModel.loadQuestionsForLevel(currentLevelId);
 
 
         // --- Observe current question LiveData ---
-        // This observer will now correctly react to the question being loaded (not null)
-        // or to null only *after* all questions have been iterated.
         gameViewModel.getCurrentQuestion().observe(this, question -> {
             if (question != null) {
 
@@ -152,10 +147,6 @@ public class GameActivity extends AppCompatActivity {
                         .show(getSupportFragmentManager(), "ResultDialog");
             }
         });
-
-        // --- Observe current question LiveData ---
-        // Removed: gameViewModel.loadQuestionsForLevel(currentLevelId); from here
-        // It's now called earlier, before the observer.
     }
 
     /**

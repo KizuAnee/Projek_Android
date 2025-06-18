@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "game_state")
 public class GameState {
     @PrimaryKey
-    public int id = 1; // Always 1 for a singleton game state
+    public int id = 1;
     public int currentLives;
-    public long lastLifeRefillTime; // Unix timestamp in milliseconds
+    public long lastLifeRefillTime;
 
     public GameState(int currentLives, long lastLifeRefillTime) {
         this.currentLives = currentLives;

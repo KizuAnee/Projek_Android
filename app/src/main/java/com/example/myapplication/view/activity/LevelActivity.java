@@ -39,7 +39,6 @@ public class LevelActivity extends AppCompatActivity {
             Intent intent = new Intent(LevelActivity.this, GameActivity.class);
             intent.putExtra("levelId", level.getId());
             intent.putExtra("chapterId", level.getChapterId()); // Mengirimkan chapterId dari objek Level
-            // ------------------------------------------
             startActivity(intent);
         }, levelViewModel, this); // Pass ViewModel dan LifecycleOwner ke adapter
 

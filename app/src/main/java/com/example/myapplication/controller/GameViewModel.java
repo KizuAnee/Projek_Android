@@ -279,7 +279,6 @@ public class GameViewModel extends AndroidViewModel {
         return currentPlayingLevelId;
     }
 
-    // NEW METHOD: Get total score for a specific chapter (used by GameActivity for chapter completion dialog)
     public int getTotalScoreForChapterSync(int chapterId) {
         return repository.getTotalScoreForChapterSync(chapterId);
     }

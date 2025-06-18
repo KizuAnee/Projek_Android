@@ -84,6 +84,6 @@ public class LevelViewModel extends AndroidViewModel {
     }
 
     public void updateLevel(Level level) {
-        repository.updateLevel(level); // Pastikan ini berjalan di thread background di repository
+        repository.updateLevel(level);
     }
 }

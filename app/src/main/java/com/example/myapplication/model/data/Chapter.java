@@ -9,7 +9,7 @@ public class Chapter {
     public int id;
     public String title;
     public String imageUrl;
-    public boolean unlocked; // New: For chapter locking
+    public boolean unlocked;
 
     public Chapter(String title, String imageUrl, boolean unlocked) {
         this.title = title;

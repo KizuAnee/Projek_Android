@@ -9,8 +9,8 @@ public class Level {
     public int id;
     public int chapterId;
     public int levelNumber;
-    public boolean completed; // New: To track if level is completed
-    public int score; // New: To store the score for this level
+    public boolean completed;
+    public int score;
 
     public Level(int chapterId, int levelNumber, boolean completed, int score) {
         this.chapterId = chapterId;

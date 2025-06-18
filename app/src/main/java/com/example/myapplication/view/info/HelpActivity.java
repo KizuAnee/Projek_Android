@@ -18,7 +18,7 @@ public class HelpActivity extends AppCompatActivity {
         Button btnBack = findViewById(R.id.btnBackToMain);
 
         String helpText =
-                "CARA BERMAIN Tebak Gambar: Komputer!\n" +
+                "\n\n\n\nCARA BERMAIN Tebak Gambar: Komputer!\n" +
                 "1.  Mulai Game: Dari Halaman Awal, klik 'Start Game'. Pilih Chapter, lalu pilih Level untuk memulai kuis.\n" +
                 "2.  Jawab Soal: Setiap Level menampilkan gambar dan pertanyaan isian kosong.\n" +
                 "    -   Ketik jawaban Anda langsung di kolom yang tersedia.\n" +
@@ -31,7 +31,7 @@ public class HelpActivity extends AppCompatActivity {
                 "    -   Nyawa habis = Game Over, kembali ke Halaman Awal.\n" +
                 "4.  Skor: Jawab benar untuk dapat poin. Salah menjawab atau waktu habis akan mengurangi poin.\n" +
                 "5.  Progres: Selesaikan semua Level di satu Chapter untuk membuka Chapter berikutnya dan melihat total skor Chapter tersebut.\n" +
-                "6.  Tujuan Akhir: Selesaikan semua Chapter untuk melihat total skor Anda secara keseluruhan!\n";
+                "6.  Tujuan Akhir: Selesaikan semua Chapter untuk melihat total skor Anda secara keseluruhan!\n\n\n\n";
         tvHelpContent.setText(helpText);
 
         btnBack.setOnClickListener(v -> finish());

@@ -19,7 +19,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ChapterDao chapterDao();
     public abstract LevelDao levelDao();
     public abstract QuestionDao questionDao();
-    public abstract GameStateDao gameStateDao(); // New
+    public abstract GameStateDao gameStateDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

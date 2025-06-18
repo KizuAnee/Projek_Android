@@ -26,10 +26,10 @@ public interface ChapterDao {
     int countChapters();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(Chapter chapter); // <-- UBAH TIPE PENGEMBALIAN MENJADI long
+    long insert(Chapter chapter);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Chapter> chapters); // Untuk List, biasanya void atau List<Long>
+    void insertAll(List<Chapter> chapters);
 
     @Update
     void update(Chapter chapter);
